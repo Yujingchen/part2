@@ -1,7 +1,6 @@
 import React from 'react'
 
 
-
 const Filter = ({ persons, query, handleSearchTextChange }) => {
     const results = query !== "" ? persons.filter((person) => person.name.toLowerCase().indexOf(query.toLowerCase()) !== -1) : null
     const resultsCollection = results ?

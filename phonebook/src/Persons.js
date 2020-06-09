@@ -1,10 +1,18 @@
 import React from 'react'
 
-const Person = ({ persons }) => {
+const Person = ({ persons, handleDeleteContact }) => {
+    const handleDeleteBtnClick = (person) => {
+        if (window.confirm(`Delete ${person.name}`)) {
+            handleDeleteContact(person.id)
+        }
+    }
     const numbersCollection = (
         persons.map(person => {
             return (
-                <p key={person.name}>{person.name} {person.number}</p>
+                <div key={person.name}>
+                    <span >{person.name} {person.number}</span>
+                    <span><button onClick={() => handleDeleteBtnClick(person)}>delete</button></span>
+                </div >
             )
         })
     )

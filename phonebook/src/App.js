@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react'
 import Filter from "./Filter"
 import PersonForm from "./PersonForm"
 import Persons from "./Persons"
+import Notification from "./Notification"
 import contactService from "./services/contacts"
 const App = () => {
     const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [query, setQuery] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
+
     useEffect(() => {
         contactService.getAll().then(initialData => {
             setPersons(initialData)
@@ -37,6 +40,10 @@ const App = () => {
                     setPersons(copy.concat(returnedData))
                 }).catch(e => {
                     console.log(e)
+                    setErrorMessage(`Something wrong happen when updating number for ${newName}`)
+                    setTimeout(() => {
+                        setErrorMessage(null)
+                    }, 5000)
                 })
             }
         }
@@ -58,7 +65,10 @@ const App = () => {
         contactService.deleteContact(id).then(() => {
             setPersons(persons.filter(person => person.id !== id))
         }).catch(e => {
-            console.log(e)
+            setErrorMessage(`Something wrong happen when deleting a contact`)
+            setTimeout(() => {
+                setErrorMessage(null)
+            }, 5000)
         })
     }
 
@@ -67,6 +77,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={errorMessage} />
             <Filter persons={persons} query={query} handleSearchTextChange={handleSearchTextChange}></Filter>
             <PersonForm hanldeSubmit={hanldeSubmit} handleNameTextChange={handleNameTextChange} handleNumberTextChange={handleNumberTextChange} newName={newName} newNumber={newNumber}></PersonForm>
             <Persons persons={persons} handleDeleteContact={(id) => handleDeleteContactOf(id)} ></Persons>

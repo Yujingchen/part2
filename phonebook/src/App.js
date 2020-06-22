@@ -10,7 +10,6 @@ const App = () => {
     const [newNumber, setNewNumber] = useState('')
     const [query, setQuery] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
-
     useEffect(() => {
         contactService.getAll().then(initialData => {
             setPersons(initialData)
@@ -25,7 +24,6 @@ const App = () => {
     const handleSearchTextChange = (event) => {
         setQuery(event.target.value)
     }
-
     const hanldeSubmit = (event) => {
         event.preventDefault()
         if (persons.filter(person => person.name === newName).length > 0) {
@@ -54,13 +52,11 @@ const App = () => {
             }
             contactService.create(newContact).then((returnedData) => {
                 setPersons(persons.concat(returnedData))
-
             })
         }
         setNewName("")
         setNewNumber("")
     }
-
     const handleDeleteContactOf = (id) => {
         contactService.deleteContact(id).then(() => {
             setPersons(persons.filter(person => person.id !== id))
@@ -71,9 +67,6 @@ const App = () => {
             }, 5000)
         })
     }
-
-    console.log("Hi from app.js")
-
     return (
         <div>
             <h2>Phonebook</h2>

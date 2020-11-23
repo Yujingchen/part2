@@ -9,7 +9,7 @@ const Person = ({ persons, handleDeleteContact }) => {
     const numbersCollection = (
         persons.map(person => {
             return (
-                <div key={person.name}>
+                <div key={person.id}>
                     <span >{person.name} {person.number}</span>
                     <span><button onClick={() => handleDeleteBtnClick(person)}>delete</button></span>
                 </div >

@@ -10,6 +10,7 @@ const App = () => {
     const [newNumber, setNewNumber] = useState('')
     const [query, setQuery] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
+    const [successMessage, setSuccessMessage] = useState('')
     useEffect(() => {
         contactService.getAll().then(initialData => {
             setPersons(initialData)
@@ -34,15 +35,21 @@ const App = () => {
                 }
                 const id = persons.find(p => p.name === newName).id
                 const copy = persons.filter(p => p.id !== id)
-                contactService.putContact(id, newContact).then((returnedData) => {
-                    setPersons(copy.concat(returnedData))
-                }).catch(e => {
-                    console.log(e)
-                    setErrorMessage(`Something wrong happen when updating number for ${newName}`)
-                    setTimeout(() => {
-                        setErrorMessage(null)
-                    }, 5000)
-                })
+                contactService.putContact(id, newContact)
+                    .then((returnedData) => {
+                        console.log("axios then")
+                        setPersons(copy.concat(returnedData))
+                    }).
+                    catch(error => {
+                        console.log("errorMessage")
+                        console.log(error)
+                        setErrorMessage(`Something wrong happen when updating number for ${newName}`, () => {
+                            console.log(errorMessage)
+                        })
+                        setTimeout(() => {
+                            setErrorMessage(null)
+                        }, 5000)
+                    })
             }
         }
         else {
@@ -52,6 +59,12 @@ const App = () => {
             }
             contactService.create(newContact).then((returnedData) => {
                 setPersons(persons.concat(returnedData))
+            }).then(e => {
+                setSuccessMessage(`Added ${newName}`)
+                console.log(successMessage)
+                setTimeout(() => {
+                    setSuccessMessage(null)
+                }, 5000)
             })
         }
         setNewName("")
@@ -60,6 +73,12 @@ const App = () => {
     const handleDeleteContactOf = (id) => {
         contactService.deleteContact(id).then(() => {
             setPersons(persons.filter(person => person.id !== id))
+        }).then(e => {
+            setSuccessMessage(`Delete contact successfully`)
+            console.log(successMessage)
+            setTimeout(() => {
+                setSuccessMessage(null)
+            }, 5000)
         }).catch(e => {
             setErrorMessage(`Something wrong happen when deleting a contact`)
             setTimeout(() => {
@@ -70,7 +89,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <Notification message={errorMessage} />
+            <Notification message={errorMessage} successMessage={successMessage} />
             <Filter persons={persons} query={query} handleSearchTextChange={handleSearchTextChange}></Filter>
             <PersonForm hanldeSubmit={hanldeSubmit} handleNameTextChange={handleNameTextChange} handleNumberTextChange={handleNumberTextChange} newName={newName} newNumber={newNumber}></PersonForm>
             <Persons persons={persons} handleDeleteContact={(id) => handleDeleteContactOf(id)} ></Persons>

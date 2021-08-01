@@ -65,6 +65,15 @@ const App = () => {
                 setTimeout(() => {
                     setSuccessMessage(null)
                 }, 5000)
+            }).catch(error=>{
+                console.log("errorMessage")
+                console.log(error.message);
+                setErrorMessage('Name should have at least 3 characters. Number should have at least 8 digits', () => {
+                    console.log(errorMessage)
+                })
+                setTimeout(() => {
+                    setErrorMessage(null)
+                }, 5000)
             })
         }
         setNewName("")
